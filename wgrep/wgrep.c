@@ -6,40 +6,40 @@ int main(int argc, char *argv[]) {
     FILE *fp;
     char *line = NULL;
     size_t len = 0;
-    if (argc == 2) {
-        //se apenas dois argumentos foram fornecidos, verifica se o segundo argumento é um arquivo válido
-        fp = fopen(argv[2], "r");
-        if (fp == NULL) {
-            fp = stdin;
-            while (getline(&line, &len, fp) != -1) {
-                printf("%s", line);
-            }
-        } 
-    } 
 
+    //ve se tem argumentos de linha de comando
     if (argc == 1) {
         printf("wgrep: searchterm [file ...]\n");
         exit(1);
     }
     
-    fp = fopen(argv[1], "r");
-    if (fp == NULL) {
-        printf("wgrep: cannot open file\n");
-        exit(1);
+    //se tiver só 1 argumento, ele vai ler a entrada padrão
+    if (argc == 1) {
+        fp = stdin;
+    } else{
+        //se tiver mais de 1 argumento, vai abrir o arquivo pedido
+        fp = fopen(argv[1], "r");
+        if (fp == NULL) {
+            printf("wgrep: cannot open file\n");
+            exit(1);
+        }
     }
 
-    // le a linha do arquivo apontado por fp e armazena essa linha em line, também atualiza len com o tamanho da linha lida, -1 é retornado quando atinge o final do arquivo ou se ocorre erro na leitura
+    //loop para processar cada linha do arquivo ou entrada padrão
     while (getline(&line, &len, fp) != -1) {
-        for(int i=0; i < argc; i++) {
+        for (int i = 1; i < argc; i++) {
             if (strstr(line, argv[i]) != NULL) {
                 printf("%s", line);
-                break;
+                break; //interrompe a verificação se a palavra for encontrada, só assim nao procura várias vezes
             }
         }
     }
-    printf("\n");
-    free(line); 
-    fclose(fp);
+
+    if (line != NULL)
+        free(line); 
+
+    if (fp != stdin)
+        fclose(fp);
 
     return 0;
 }
