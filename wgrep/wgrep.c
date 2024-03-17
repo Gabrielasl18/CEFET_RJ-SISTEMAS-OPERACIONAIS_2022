@@ -7,18 +7,18 @@ int main(int argc, char *argv[]) {
     char *line = NULL;
     size_t len = 0;
 
-    //ve se tem argumentos de linha de comando
-    if (argc == 1) {
+    //verifica se há argumentos de linha de comando
+    if (argc < 2) {
         printf("wgrep: searchterm [file ...]\n");
         exit(1);
     }
-    
-    //se tiver só 1 argumento, ele vai ler a entrada padrão
-    if (argc == 1) {
+
+    //se tiver só 1 argumento, lê da entrada padrão
+    if (argc == 2) {
         fp = stdin;
-    } else{
-        //se tiver mais de 1 argumento, vai abrir o arquivo pedido
-        fp = fopen(argv[1], "r");
+    } else {
+        //se tiver mais de 1 argumento, abre o arquivo que foi pedido
+        fp = fopen(argv[2], "r");
         if (fp == NULL) {
             printf("wgrep: cannot open file\n");
             exit(1);
@@ -27,10 +27,11 @@ int main(int argc, char *argv[]) {
 
     //loop para processar cada linha do arquivo ou entrada padrão
     while (getline(&line, &len, fp) != -1) {
+        //verifica a palavra do termo de pesquisa em cada linha
         for (int i = 1; i < argc; i++) {
             if (strstr(line, argv[i]) != NULL) {
                 printf("%s", line);
-                break; //interrompe a verificação se a palavra for encontrada, só assim nao procura várias vezes
+                break; //interrompe a verificação se a palavra for encontrada
             }
         }
     }
@@ -43,6 +44,7 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
 
 /*
 
