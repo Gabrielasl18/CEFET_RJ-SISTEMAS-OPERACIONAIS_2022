@@ -1,0 +1,137 @@
+
+//processo para cada novo comando
+//usar execv
+//analisar a linha de entrada em partes constituintes, você pode usar strsep()
+//em qualquer modo, se você atingir o marcador de fim de arquivo (EOF), deverá chamar exit(0) 
+//Para ler linhas de entrada, você deve usar getline()
+//modo interativo = usar stdin
+//shell executado em loop while
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+
+int main(int argc, char *argv[]) {
+    if (argc == 1) {
+            exit(0);
+    }
+    FILE *fp;
+    char *line = NULL;
+    size_t len = 0;
+    pid_t pid_filho = fork();
+    char command[10], options[10], path[512];
+    
+    if(pid_filho < 0) {
+        fprintf(stderr, "Not \n");
+        return 1;
+    }
+    
+    if(pid_filho == 0) {
+        fp = fopen(argv[1], "r");
+        if (fp == NULL) {
+            printf("wcat: cannot open file\n");
+            exit(1);
+        }
+        while (getline(&line, &len, fp) != -1) {
+            printf("%s", line);
+        }
+        sscanf(line, "%s %s %s", command, options, path);
+    
+        char *childArgs[4] = {command, options, path, NULL};
+        execvp(childArgs[0], childArgs);
+        fclose(fp);
+    } else {
+        pid_filho - wait(NULL);
+        printf("Eu sou o processo pai (PID %d). \nMEu processo filhot em PID %d. \n", getpid(), pid_filho);
+    }
+
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <string.h>
+
+#define MAX_COMMAND_LENGTH 1024
+
+// Função para imprimir a mensagem de erro
+void print_error() {
+    char error_message[30] = "An error has occurred\n";
+    write(STDERR_FILENO, error_message, strlen(error_message));
+}
+
+int main(int argc, char *argv[]) {
+    char command[MAX_COMMAND_LENGTH];
+    
+    // Loop while para manter o shell em execução
+    while(1) {
+        printf("wish> ");
+        fflush(stdout);
+
+        // Ler a entrada do usuário
+        if (fgets(command, sizeof(command), stdin) == NULL) {
+            // Se atingir o marcador de fim de arquivo (EOF), chame exit(0)
+            exit(0);
+        }
+
+        // Remover o caractere de nova linha
+        command[strcspn(command, "\n")] = '\0';
+
+        // Inicializar o array de argumentos
+        char *args[MAX_COMMAND_LENGTH] = {NULL};
+        char *token;
+        int i = 0;
+
+        // Analisar a linha de entrada em partes constituintes
+        token = strtok(command, " ");
+        while (token != NULL) {
+            args[i++] = token;
+            token = strtok(NULL, " ");
+        }
+
+        // Criar um novo processo filho
+        pid_t pid_filho = fork();
+
+        if (pid_filho < 0) {
+            print_error();
+            exit(EXIT_FAILURE);
+        }
+
+        if (pid_filho == 0) {
+            // Processo filho
+            // Executar o comando usando execv
+
+            // Buscar o caminho completo do executável
+            char full_command[MAX_COMMAND_LENGTH];
+            snprintf(full_command, sizeof(full_command), "/bin/%s", args[0]);
+
+            // Executar o comando
+            execv(full_command, args);
+
+            // Se execv retornar, algo deu errado
+            print_error();
+            exit(EXIT_FAILURE);
+        } else {
+            // Processo pai
+            // Esperar pelo término do processo filho
+            wait(NULL);
+        }
+    }
+
+    return 0;
+}
+
