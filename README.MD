@@ -73,17 +73,80 @@ a prova vai até escalonamento ULFQ
 
 Escalonamento
 
-Preciso escolher algum processo pra executar, existe uma lista de processos prontos para executar, mas tem só 1 processador, sempre que tenho que fazer essa escolha, aciono o escalonador e o escalonador implementa alguma política
+Preciso escolher algum processo pra executar, existe uma lista de processos prontos para executar, mas tem só 1 processador, sempre que tenho que fazer essa escolha, aciono o escalonador e o escalonador implementa alguma políticas
 
 > Políticas
 
+Métricas
+
+Para comparar políticas Métricas 
+
+* Turnaround = Tfim - Tchegada
+
+Tempo de execução + temmpo de espera
+
+os algoritmos de escalonamento quer diminuir o turnaround time, pra minimizar o tempo de espera dos processos, porque consigo executar mais coisas
+
+# poítica FIFO 
+
+Não foi tão ruim. Supõe que chega ao mesmo tempo
+
+* Turnaround = Tfim 
+
+o processo que chegou primeiro, vai ser o primeiro atendido
+tem um problema, que é do comboio, uma coisa muito grande na frente atrasando os pequenos de trás
+
+resolver o problema do FIFO
+
+# Shortest Job First (SJF)
+
+sei o tamanho de cada processo, vc pega o que leva menos tempo primeiro. Vai pegar sempre o que é o menor, independente de quem é o primeiro
+Desde que todos cheguem ao mesmo tempo, se nao chegarem, não é essa política que minimiza o turnaround time
+
+(cai na prova)
+
+problemas:
+
+agora processos podem chegar a qualquer momento
+
+o processo executa até o final, mas pode chegar um menor que ele, ele vai esperar o maior terminar pra ele executar
 
 
+agora processos podem chegar a qualquer momento e agora processos podem ser preemptado, pode sofrer preempcao, pra resolver isso usamos a política
+
+# Shortest Time-To-Completion First (STJF)
+
+o processo pode ser interrompido, ou seja, preempcao 
+vai escolher o que falta menos tempo pra terminar
+
+Métrica: Tempo de Resposta
+
+É dado pelo tempo onde o programa é executado pela primeira vez - o tempo de chegada, ou seja, quanto tempo demoorou ate que o processo conseguiu executar e exibiu pra vc
 
 
+# Round Robin (RR)
 
+escolhe os processos, faz a escolha com base no FIFO, mas é preemptivo, ou seja, todos eles tem o mesmo tempo pra executar
 
+todos tem a oportunidade de executar um pouco
 
+o tempo de resposta vai cair, acabando com o problema do STJF, tendo um tempo de resposta menor
 
+se escolher uma fatia grande, vai partir pro FIFO, se for muito pequeno, vai trocar processos o tempo todo, ou seja, a cache do processador, o TLB, tudo isso vao se tornar um problema. ou seja, tem que achar uma fatia pra nao virar um fifo ou causar tanta troca de contexto.
 
+ele posterga o tempo de fim, aumentando o tornaround time
+
+Incluindo E/S
+
+Política
+
+# Multi-Level Feedback Queue (MLFQ)
+
+política muito boa pro tornaround time e outras pro tempo de espera, mas queremos que seja boa pros 2, mas q no tornaround time se aproxime do STJF
+
+parte da premissao que todos sao iguais
+
+coloca todo mundo numa fila baseada no RR, baseado FIFO, quem terminar na fatia de tempo, é pequeno, quem nao terminar é grande, esses que nao terminarem, vao pra outra fila
+
+varias filas e elas representam prioridades e prefiro pegar processos da filas de cima, cada fila usa a política RR (tentando minimizar o tempo de resposta), conforme ele nao vai terminando, vai ficando menos priortário e de tempos em tempos eles voltam pra fila de maior prioridade de novo
 
