@@ -71,6 +71,11 @@ manter uma lista de paginas ordenadas da menos frequentemente utilizadas para a 
 
 a prova vai até escalonamento ULFQ
 
+Escalonamento
+
+Preciso escolher algum processo pra executar, existe uma lista de processos prontos para executar, mas tem só 1 processador, sempre que tenho que fazer essa escolha, aciono o escalonador e o escalonador implementa alguma política
+
+> Políticas
 
 
 
