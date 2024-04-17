@@ -100,6 +100,8 @@ resolver o problema do FIFO
 
 # Shortest Job First (SJF)
 
+* Turnaround = Tfim - Tchegada
+
 sei o tamanho de cada processo, vc pega o que leva menos tempo primeiro. Vai pegar sempre o que é o menor, independente de quem é o primeiro
 Desde que todos cheguem ao mesmo tempo, se nao chegarem, não é essa política que minimiza o turnaround time
 
@@ -115,6 +117,8 @@ o processo executa até o final, mas pode chegar um menor que ele, ele vai esper
 agora processos podem chegar a qualquer momento e agora processos podem ser preemptado, pode sofrer preempcao, pra resolver isso usamos a política
 
 # Shortest Time-To-Completion First (STJF)
+
+* Turnaround = Tfim - Tchegada
 
 o processo pode ser interrompido, ou seja, preempcao 
 vai escolher o que falta menos tempo pra terminar
@@ -149,4 +153,16 @@ parte da premissao que todos sao iguais
 coloca todo mundo numa fila baseada no RR, baseado FIFO, quem terminar na fatia de tempo, é pequeno, quem nao terminar é grande, esses que nao terminarem, vao pra outra fila
 
 varias filas e elas representam prioridades e prefiro pegar processos da filas de cima, cada fila usa a política RR (tentando minimizar o tempo de resposta), conforme ele nao vai terminando, vai ficando menos priortário e de tempos em tempos eles voltam pra fila de maior prioridade de novo
+
+Como implementar?
+
+tentativa 1: como alterar prioridades
+
+Processos interativos geralmente requerem interação frequente com o usuário e têm tempos de resposta curtos. Eles são sensíveis ao tempo de espera e geralmente são colocados em filas de prioridade mais altas.
+
+Por outro lado, processos CPU-bound (processos de uso intensivo de CPU) geralmente não exigem interação frequente com o usuário e podem realizar longas tarefas de computação. Eles são menos sensíveis ao tempo de espera e, portanto, podem ser colocados em filas de prioridade mais baixas.
+
+Ao alterar as prioridades dos processos com base em seu comportamento (interativo vs. CPU-bound), o sistema pode adaptar dinamicamente o escalonamento para atender às necessidades dos diferentes tipos de processos e otimizar o desempenho geral do sistema. Isso significa que os processos interativos têm prioridade para serem executados mais rapidamente, enquanto os processos CPU-bound podem ter uma prioridade mais baixa para não monopolizar os recursos do sistema.
+
+MLFQ têm 3 problemas
 
