@@ -166,3 +166,6 @@ Ao alterar as prioridades dos processos com base em seu comportamento (interativ
 
 MLFQ têm 3 problemas
 
+como vai paginando a tabela de paginas ate gerar todos os niveis
+chamada de sistemas
+escalonaento
